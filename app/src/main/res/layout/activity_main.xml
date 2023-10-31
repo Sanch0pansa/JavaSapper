@@ -30,5 +30,12 @@
         android:text="10/10"
         android:textSize="20sp"></TextView>
 
+    <Button
+        android:onClick="newGame"
+        android:id="@+id/reload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Новая игра" />
+
 
 </LinearLayout>

@@ -25,18 +25,20 @@ public class MainActivity extends AppCompatActivity {
     final int HEIGHT = 10;
     final int MINESCONST = 10;
     int MinesCurrent = 10;
+    boolean game = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mines = findViewById(R.id.TV);
-        mines.setText(""+MinesCurrent+" / "+MINESCONST + " Флажков");
         generate();
 
     }
 
     public void generate(){
+        mines.setText(""+MinesCurrent+" / "+MINESCONST + " Флажков");
+        game = true;
         GridLayout layout = findViewById(R.id.GRID);
         layout.removeAllViews();
         layout.setColumnCount(WIDTH);
@@ -65,7 +67,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v)  {
                         try {
-                            MainActivity.this.open(finalI, finalJ);
+                            if (MainActivity.this.game)
+                                MainActivity.this.open(finalI, finalJ);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -75,7 +78,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public boolean onLongClick(View v) {
                         try {
-                            MainActivity.this.setFlag(finalI, finalJ);
+                            if (MainActivity.this.game)
+                                MainActivity.this.setFlag(finalI, finalJ);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -156,7 +160,8 @@ public class MainActivity extends AppCompatActivity {
         cells[y][x].setText(text);
 
         if (fields[y][x] == -1) {
-            Toast.makeText(getApplicationContext(),"Вы проиграли!",Toast.LENGTH_LONG).show();
+            game = false;
+            Toast.makeText(getApplicationContext(),"ВЫ ПРОИГРАЛИ!",Toast.LENGTH_LONG).show();
 
             cells[y][x].setBackgroundColor(Color.RED);
             cells[y][x].setText("M");
@@ -213,7 +218,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (!exist_closed_fields) {
+            game = false;
             Toast.makeText(getApplicationContext(),"ВЫ ВЫИГРАЛИ",Toast.LENGTH_LONG).show();
         }
+    }
+
+    public void newGame(View v) {
+        this.generate();
     }
 }
