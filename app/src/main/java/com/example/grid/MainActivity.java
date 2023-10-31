@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void generate(){
+        MinesCurrent = MINESCONST;
         mines.setText(""+MinesCurrent+" / "+MINESCONST + " Флажков");
         game = true;
         GridLayout layout = findViewById(R.id.GRID);
