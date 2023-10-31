@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Random;
+import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -128,6 +129,11 @@ public class MainActivity extends AppCompatActivity {
     public void open(int y, int x) {
         int color = Color.BLACK;
         String text = "" + fields[y][x];
+        if (opened_fields[y][x]) {
+            return;
+        }
+        opened_fields[y][x] = true;
+
         switch(fields[y][x]) {
             case 0:
                 text = "";
@@ -153,9 +159,27 @@ public class MainActivity extends AppCompatActivity {
         cells[y][x].setText(text);
 
         if (fields[y][x] == -1) {
+            Toast.makeText(getApplicationContext(),"ВЫ КРИВОРУКИЙ ЕБАНАТ, ПОЗДРАВЛЯЮ!",Toast.LENGTH_LONG).show();
+
             cells[y][x].setBackgroundColor(Color.RED);
             cells[y][x].setText("M");
             cells[y][x].setTextColor(Color.WHITE);
+        }
+        if (fields[y][x] == 0) {
+
+            int mn_y = Math.max(y - 1, 0);
+            int mn_x = Math.max(x - 1, 0);
+            int mx_y = Math.min(y + 1, HEIGHT - 1);
+            int mx_x = Math.min(x + 1, WIDTH - 1);
+
+            for (int cy = mn_y; cy <= mx_y; cy++) {
+                for (int cx = mn_x; cx <= mx_x; cx++) {
+                    if (cx != x || cy != y) {
+                        open(cy, cx);
+                    }
+                }
+            }
+
         }
     }
 
