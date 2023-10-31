@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mines = findViewById(R.id.TV);
-        mines.setText(""+MINESCONST+" / "+MinesCurrent);
+        mines.setText(""+MinesCurrent+" / "+MINESCONST + " Флажков");
         generate();
 
     }
@@ -82,9 +82,8 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     }
                 });
-
+                cells[i][j].setBackgroundColor(Color.GRAY);
                 cells[i][j].setText("?");
-                cells[i][j].setTag(""+(j+WIDTH*i));
                 layout.addView(cells[i][j]);
             }
         }
@@ -101,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
                 y = rand.nextInt(HEIGHT - 1);
             }
             fields[y][x] = -1;
-            cells[y][x].setText("M");
         }
 
         // Counting nearest mines
@@ -120,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     }
-                    cells[i][j].setText("" + fields[i][j]);
                 }
             }
         }
@@ -155,11 +152,11 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         cells[y][x].setTextColor(color);
-        cells[y][x].setBackgroundColor(Color.BLACK);
+        cells[y][x].setBackgroundColor(Color.WHITE);
         cells[y][x].setText(text);
 
         if (fields[y][x] == -1) {
-            Toast.makeText(getApplicationContext(),"ВЫ КРИВОРУКИЙ ЕБАНАТ, ПОЗДРАВЛЯЮ!",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"Вы проиграли!",Toast.LENGTH_LONG).show();
 
             cells[y][x].setBackgroundColor(Color.RED);
             cells[y][x].setText("M");
@@ -181,9 +178,42 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
+        checkGameIsOver();
     }
 
     public void setFlag(int y, int x) {
-        cells[y][x].setBackgroundColor(Color.BLUE);
+        if (!flags[y][x] && !opened_fields[y][x]) {
+            if (MinesCurrent > 0) {
+                opened_fields[y][x] = true;
+                flags[y][x] = true;
+                cells[y][x].setBackgroundColor(Color.BLUE);
+                MinesCurrent--;
+            } else {
+                Toast.makeText(getApplicationContext(),"У Вас кончились флажки!",Toast.LENGTH_LONG).show();
+            }
+        } else {
+            opened_fields[y][x] = false;
+            flags[y][x] = false;
+            cells[y][x].setBackgroundColor(Color.GRAY);
+            MinesCurrent ++;
+        }
+        mines.setText(""+MinesCurrent+" / "+MINESCONST + " Флажков");
+
+        checkGameIsOver();
+    }
+
+    public void checkGameIsOver() {
+        boolean exist_closed_fields = false;
+        for (int i = 0; i < HEIGHT; i++) {
+            for (int j = 0; j < WIDTH; j++) {
+                if (!opened_fields[i][j]) {
+                    exist_closed_fields = true;
+                }
+            }
+        }
+
+        if (!exist_closed_fields) {
+            Toast.makeText(getApplicationContext(),"ВЫ ВЫИГРАЛИ",Toast.LENGTH_LONG).show();
+        }
     }
 }
